@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="22010" />
+
+<meta name="date" content="2022-12-08" />
+
+<title>myfunction_vignette</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">myfunction_vignette</h1>
+<h4 class="author">22010</h4>
+<h4 class="date">2022-12-08</h4>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(StatComp22010)</span></code></pre></div>
+<hr />
+<div id="sexction-1" class="section level2">
+<h2>Sexction 1</h2>
+<p>This section is the implementation of the method raised by WEI LIN,
+PIXU SHI, RUI FENG AND HONGZHE LI in “Variable selection in regression
+with compositional covariates”, 2014.</p>
+<div id="question-background" class="section level3">
+<h3>Question background</h3>
+<p>Variable selection and estimation in high-dimensional regression with
+compositional covariates, compositional data, which consist of the
+proportions or percentages of a composition, appear frequently in a wide
+range of applications; examples include geochemical compositions of
+rocks in geology, household patterns of expenditure in economics,
+species compositions of biological communities in ecology, and topic
+compositions of documents in machine learning. The fact that the
+components of a composition must sum to unity renders many standard
+multivariate statistical methods inappropriate or inapplicable.</p>
+</div>
+<div id="mathematical-form" class="section level3">
+<h3>Mathematical form</h3>
+<p>With Log-contrast models and question transformation, the question
+above is written as: <span class="math display">\[y=Z\beta^{\star}+\epsilon,\quad
+\sum_{j=1}^{p}\beta^{\star}=1,\]</span></p>
+<p>where y represent the response n-vector, <span class="math inline">\(Z = log(X_{ij})\)</span>, X represent the n × p
+matrix of covariates, <span class="math inline">\(\beta^{\star}\)</span>
+is the corresponding p-vector of regression coefficient, <span class="math inline">\(\epsilon\)</span> is an n-vector of independent
+noise distributed as <span class="math inline">\(N(0,
+\sigma^2)\)</span>.</p>
+</div>
+<div id="constrained-convex-optimization-problem" class="section level3">
+<h3>Constrained convex optimization problem</h3>
+<p>Applying the <span class="math inline">\(\ell _1\)</span>
+regularization approach and transform to:</p>
+<p><span class="math display">\[\hat \beta =
+\underset{\beta}{argmin}{(\frac{1}{2n}||y-Z\beta||_2^2+\lambda||\beta||_1)},\quad
+suject \ to  \sum_{j=1}^{p}\beta_j=1\]</span></p>
+<p>where <span class="math inline">\(\beta=(\beta_1,...,\beta_p)^T,\lambda&gt;0\)</span>
+is a regularization parameter.</p>
+</div>
+<div id="tuning-parameter-selection" class="section level3">
+<h3>Tuning parameter selection</h3>
+<p>The regularization parameter <span class="math inline">\(\lambda\)</span> can be selected by the
+generalized information criterion for high-dimensional penalized
+likelihood proposed by Fan &amp; Tang (2013). define:</p>
+<p><span class="math display">\[GIC(\lambda)=log(\hat
+\sigma_\lambda^2)+(s_\lambda-1)\frac{log(log(n))}{n}log(p \vee
+n)\]</span></p>
+<p>where <span class="math inline">\(\hat \sigma_\lambda^2=||y-Z\hat
+\beta_\lambda||_2^2/n\)</span>, <span class="math inline">\(\hat
+\beta_\lambda\)</span> is the regularized estimator, <span class="math inline">\(p \vee n= max(p, n)\)</span>, <span class="math inline">\(s_\lambda\)</span> is the number of nonzero
+coefficients in <span class="math inline">\(\hat \beta_\lambda\)</span>,
+select the optimal <span class="math inline">\(\lambda\)</span> by
+minimizing <span class="math inline">\(GIC(\lambda)\)</span>.</p>
+</div>
+<div id="usage-of-function" class="section level3">
+<h3>Usage of function</h3>
+<p>There we will try some parts of the content in the numeric study of
+the paper, compare the results.</p>
+<p><strong>step1</strong>. Data generation.</p>
+<p>function <em>data_generate</em> is used to generate the data
+according to the setting of the numeric study of the paper. Check the
+details in the paper.</p>
+<p>function <em>data_generate</em> is there with 5 parameters including
+<em>n</em>,<em>p</em>,<em>beta</em>,<em>rho</em> and <em>sig</em>, with
+defaults rho=0.2, sig=0.5, and return the list including <span class="math inline">\(n\times p\)</span> matrix of covariates X,
+response n-vector y.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">=</span><span class="dv">30</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="sc">-</span><span class="fl">0.8</span>,<span class="fl">0.6</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="sc">-</span><span class="fl">1.5</span>,<span class="sc">-</span><span class="fl">0.5</span>,<span class="fl">1.2</span>),<span class="fu">rep</span>(<span class="dv">0</span>,p<span class="dv">-8</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">=</span> <span class="fu">data_generate</span>(<span class="at">n=</span><span class="dv">50</span>,<span class="at">p=</span><span class="dv">30</span>,<span class="at">beta =</span> beta)</span></code></pre></div>
+<p><strong>step2</strong>. Main function apply.</p>
+<p>Our main functions include two named <em>estimate</em> and
+<em>lrate_GIC</em>.</p>
+<p>The former takes <em>X</em>,<em>y</em>,<em>learing_rate</em> and
+<em>tol</em> as input - default tol=1e-5 - respectively represent the
+<span class="math inline">\(n\times p\)</span> matrix of covariates,
+response n-vector, regularization parameter and update tolerance for
+convergence. It will return the estimate of coefficient beta.</p>
+<p>The latter takes <em>X</em>,<em>y</em>,<em>tol</em> as input with the
+same meaning and default, return the estimate of coefficient beta with
+the best regularization parameter by minimizing the GIC, it return the
+list including the components learning_rate_GIC and GIC which give the
+location of the minimum and the value of the GIC at that point.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">=</span> <span class="fu">lrate_GIC</span>(<span class="at">X=</span>data1[[<span class="dv">1</span>]],<span class="at">y=</span>data1[[<span class="dv">2</span>]])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>learning_rate_GIC <span class="ot">=</span> result[<span class="dv">1</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>GIC_value <span class="ot">=</span> result[<span class="dv">2</span>]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#estimate beta</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>beta_est <span class="ot">=</span> <span class="fu">estimate</span>(<span class="at">X=</span>data1[[<span class="dv">1</span>]],<span class="at">y=</span>data1[[<span class="dv">2</span>]],<span class="at">learning_rate =</span> <span class="fu">unlist</span>(learning_rate_GIC))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">cbind</span>(learning_rate_GIC,GIC_value))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   learning_rate_GIC GIC_value</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; learning_rate_GIC 0.1369273         0.9907938</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">cbind</span>(beta,beta_est))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       beta    beta_est</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1,]  1.0  1.00150649</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [2,] -0.8 -0.60237268</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [3,]  0.6  0.36114271</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [4,]  0.0  0.00000000</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5,]  0.0  0.00000000</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [6,] -1.5 -1.44311278</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7,] -0.5 -0.34295298</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [8,]  1.2  1.00069712</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9,]  0.0  0.00000000</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [10,]  0.0  0.00000000</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [11,]  0.0  0.00000000</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [12,]  0.0  0.00000000</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13,]  0.0  0.00000000</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [14,]  0.0  0.00000000</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [15,]  0.0  0.00000000</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [16,]  0.0  0.00000000</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17,]  0.0  0.00000000</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [18,]  0.0  0.00000000</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [19,]  0.0  0.00000000</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [20,]  0.0  0.00000000</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21,]  0.0  0.00000000</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [22,]  0.0  0.00000000</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [23,]  0.0  0.00000000</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [24,]  0.0  0.00000000</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25,]  0.0  0.00000000</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [26,]  0.0  0.02458779</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [27,]  0.0  0.00000000</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [28,]  0.0  0.00000000</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29,]  0.0  0.00000000</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [30,]  0.0  0.00000000</span></span></code></pre></div>
+<p><strong>step3</strong>. Evaluation function.</p>
+<p>Evaluation functions include two named <em>pred_error</em> and
+<em>est_acc</em>, which are to evaluate the performance of the
+algorithm, the former compute the prediction error <span class="math inline">\(||y-Z\hat \beta||_2^2/n\)</span> , the latter
+compute the estimation accuracy by <span class="math inline">\(\ell_q\)</span> losses <span class="math inline">\(||\hat \beta-\beta^{\star}||,\quad
+q=1,2,\infty\)</span>, where <span class="math inline">\(\beta^{\star}\)</span> is the true regression
+coefficient.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#compute estimation error.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>prediction_error<span class="ot">=</span><span class="fu">pred_error</span>(<span class="at">x=</span>data1[[<span class="dv">1</span>]],<span class="at">y=</span>data1[[<span class="dv">2</span>]],<span class="at">beta_hat =</span> beta_est)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#compute estimation accuracy. </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>estimation_accuracy<span class="ot">=</span><span class="fu">est_acc</span>(beta_est,beta)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(prediction_error)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.3501668</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(estimation_accuracy)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $loss_1</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.875816</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $loss2</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.4053859</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $loss_infty</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2388573</span></span></code></pre></div>
+</div>
+</div>
+<div id="section-2" class="section level2">
+<h2>Section 2</h2>
+<p>This section is the implementaion of algorithm named sequentially and
+iteratively reweighted squares(SIRS) raised by JINCHI LV AND YINGYING
+FAN in “a unified approach to model selection and sparse recovery using
+regularized least squares”, 2009.</p>
+<div id="question-background-1" class="section level3">
+<h3>Question background</h3>
+<p>Many real-world signals are approximately sparse, meaning that a
+small fraction of the coordinates contain almost all the signal mass;
+examples include images, audio, and any signals drawn from Zipfian,
+power-law, or log-normal distributions. If a signal <span class="math inline">\(x \in \mathbb{R}^n\)</span> is approximately
+k-sparse, then ideally the complexity of estimating or manipulating x
+should scale primarily with k rather than n.</p>
+<p>Such sparse recovery algorithms are possible for a variety of
+different problem variants, corresponding to different modalities of
+measuring x and different guarantees on the estimation error. In this
+chapter we will consider streaming algorithms, compressed sensing, and
+sparse Fourier transforms, as well as extensions to low-rank matrix
+recovery.</p>
+</div>
+<div id="mathematical-form-1" class="section level3">
+<h3>Mathematical form</h3>
+<p>Find the minimum <span class="math inline">\(L_0\)</span> (sparsest
+possible) solution to the linear equation: <span class="math display">\[\pmb{y}=\pmb{X}\pmb{\beta}\]</span> where <span class="math inline">\(\pmb{ \beta
+}=(\beta_1,...,\beta_p)^T\)</span>,<span class="math inline">\(\pmb{y}=\pmb{X}\pmb{\beta_0}\)</span>,<span class="math inline">\(\pmb{X}\)</span> is a <span class="math inline">\(n\times p\)</span> design matrix, <span class="math inline">\(\pmb{\beta_0}=(\beta_{0,1},...,\beta_{0,p})\)</span></p>
+<p>When the <span class="math inline">\(p \times p\)</span> matrix <span class="math inline">\(\pmb{X}^T \pmb{X}\)</span> is singular or close to
+singular and n is large, finding <span class="math inline">\(\pmb{\beta_0}\)</span> is not an easy task.</p>
+</div>
+<div id="constrained-convex-optimization-problem-1" class="section level3">
+<h3>Constrained convex optimization problem</h3>
+<p><span class="math inline">\(\rho\)</span>-regularization problem:</p>
+<p><span class="math display">\[\min\sum_{j=1}^{p}\rho(|\beta_j|),\quad
+subjected\ to \ \pmb{y}=\pmb{X}\pmb{\beta},\]</span></p>
+<p>with <span class="math inline">\(\rho_a\)</span> penalty,<span class="math inline">\(a \in (0,\infty)\)</span></p>
+<p><span class="math display">\[\rho_a(t)=(\frac{t}{a+t})I(t\ne0)+(\frac{a}{a+t})t,\quad
+t\in [0,\infty)\]</span></p>
+<p>and <span class="math display">\[\rho_0(t)=I(t\ne 0),\
+\rho_\infty(t)=t, \quad t\in [0,\infty)\]</span></p>
+</div>
+<div id="usage-of-function-1" class="section level3">
+<h3>Usage of function</h3>
+<p>PS. all of the package functions in this section are written by
+Rcpp.</p>
+<p>Our main function only contains one named <em>sirs</em>, which takes
+A,y,x0,maxsize,eps,a,delta,thresh,maxiter,maxseq and tol as input,with
+default delta=1e-6,thresh=1e-6,maxiter=50, maxseq = 50, tol=1e-6,see the
+meaning respectively by <em>help(sirs)</em>, mostly the only input we
+are concerned are <span class="math inline">\(n\times p\)</span>design
+matrix <em>X</em>, response n-vector <em>y</em>, initial position for
+algorithm <em>x0</em>, sirs parameter for penalty <em>a</em>, maximum
+size of the sparse model <em>maxsize</em>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#generate the data for numeric study</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">=</span> <span class="dv">50</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>a <span class="ot">=</span> <span class="fl">0.4</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>,p))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>sigma1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, p, p)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>sigma1 <span class="ot">&lt;-</span> rho <span class="sc">^</span> (<span class="fu">abs</span>(<span class="fu">row</span>(sigma1) <span class="sc">-</span> <span class="fu">col</span>(sigma1)))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>A <span class="ot">=</span> <span class="fu">mvrnorm</span>(n,mu,sigma1)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.5</span>,<span class="sc">-</span><span class="fl">0.5</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="fl">1.2</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="fu">rep</span>(<span class="dv">0</span>,p<span class="dv">-5</span>))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> A<span class="sc">%*%</span>beta</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#use function sirs</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>beta_hat<span class="ot">=</span><span class="fu">sirs</span>(A,y,<span class="at">x0=</span><span class="fu">rep</span>(<span class="dv">1</span>,p),<span class="at">maxsize=</span><span class="fu">min</span>(<span class="fu">ceiling</span>(n<span class="sc">/</span><span class="dv">2</span>),p),<span class="at">eps=</span><span class="dv">1</span><span class="sc">/</span>p,<span class="at">a=</span>a)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(beta[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>],beta_hat[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3] [,4] [,5]</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]  0.5 -0.5    1 -1.2   -1</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2,]  0.5 -0.5    1 -1.2   -1</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>prediction_error <span class="ot">=</span> <span class="fu">pred_error</span>(<span class="fu">exp</span>(A),y,<span class="fu">as.matrix</span>(beta_hat))</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>estimation_accuracy <span class="ot">=</span> <span class="fu">est_acc</span>(beta_hat,beta)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(prediction_error)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.733728e-30</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(estimation_accuracy)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $loss_1</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.906573e-14</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $loss2</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3.396084e-15</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $loss_infty</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.387779e-15</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

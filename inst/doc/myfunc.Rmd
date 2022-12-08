@@ -1,0 +1,159 @@
+---
+title: "myfunction_vignette"
+output: rmarkdown::html_vignette
+author: "22010"
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{myfunction_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(StatComp22010)
+```
+
+--------
+
+## Sexction 1
+
+This section is the implementation of the method raised by WEI LIN, PIXU SHI, RUI FENG AND HONGZHE LI in "Variable selection in regression with compositional covariates", 2014. 
+
+### Question background
+
+Variable selection and estimation in high-dimensional regression with compositional covariates, compositional data, which consist of the proportions or percentages of a composition, appear frequently in a wide range of applications; examples include geochemical compositions of rocks in geology, household patterns of expenditure in economics, species compositions of biological communities in ecology, and topic compositions of documents in machine learning. The fact that the components of a composition must sum to unity renders many standard multivariate statistical methods inappropriate or inapplicable. 
+
+### Mathematical form
+
+With Log-contrast models and question transformation, the question above is written as: 
+$$y=Z\beta^{\star}+\epsilon,\quad \sum_{j=1}^{p}\beta^{\star}=1,$$
+
+where y represent the response n-vector, $Z = log(X_{ij})$, X represent the n × p matrix of covariates,  $\beta^{\star}$ is the corresponding p-vector of regression coefficient, $\epsilon$ is an n-vector of independent noise distributed as $N(0, \sigma^2)$.
+
+###  Constrained convex optimization problem
+
+Applying the $\ell _1$ regularization approach and transform to:
+
+$$\hat \beta = \underset{\beta}{argmin}{(\frac{1}{2n}||y-Z\beta||_2^2+\lambda||\beta||_1)},\quad suject \ to  \sum_{j=1}^{p}\beta_j=1$$
+
+where $\beta=(\beta_1,...,\beta_p)^T,\lambda>0$ is a regularization parameter.
+
+### Tuning parameter selection
+
+The regularization parameter $\lambda$ can be selected by the generalized information criterion for high-dimensional penalized likelihood proposed by Fan & Tang (2013). define:
+
+$$GIC(\lambda)=log(\hat \sigma_\lambda^2)+(s_\lambda-1)\frac{log(log(n))}{n}log(p \vee n)$$
+
+where $\hat \sigma_\lambda^2=||y-Z\hat \beta_\lambda||_2^2/n$, $\hat \beta_\lambda$ is the regularized estimator, $p \vee n= max(p, n)$, $s_\lambda$ is the number of nonzero coefficients in $\hat \beta_\lambda$, select the optimal $\lambda$ by minimizing $GIC(\lambda)$.
+
+### Usage of function
+
+There we will try some parts of the content in the numeric study of the paper, compare the results.
+
+**step1**. Data generation. 
+
+function _data_generate_ is used to generate the data according to the setting of the numeric study of the paper. Check  the details in the paper.
+
+function _data_generate_ is there with 5 parameters including _n_,_p_,_beta_,_rho_ and _sig_, with defaults rho=0.2, sig=0.5, and return the list including $n\times p$ matrix of covariates X, response n-vector y.
+```{r}
+p=30
+beta = c(c(1,-0.8,0.6,0,0,-1.5,-0.5,1.2),rep(0,p-8))
+data1 = data_generate(n=50,p=30,beta = beta)
+```
+
+**step2**. Main function apply.
+
+Our main functions include two named _estimate_ and _lrate_GIC_.
+
+The former takes _X_,_y_,_learing_rate_ and _tol_ as input - default tol=1e-5 - respectively represent the $n\times p$ matrix of covariates, response n-vector, regularization parameter and update tolerance for convergence. It will return the estimate of coefficient beta.
+
+The latter takes _X_,_y_,_tol_ as input with the same meaning and default, return the estimate of coefficient beta with the best regularization parameter by minimizing the GIC, it return the list including the components learning_rate_GIC and GIC which give the location of the minimum and the value of the GIC at that point.
+```{r}
+result = lrate_GIC(X=data1[[1]],y=data1[[2]])
+learning_rate_GIC = result[1]
+GIC_value = result[2]
+#estimate beta
+beta_est = estimate(X=data1[[1]],y=data1[[2]],learning_rate = unlist(learning_rate_GIC))
+print(cbind(learning_rate_GIC,GIC_value))
+print(cbind(beta,beta_est))
+```
+
+**step3**. Evaluation function.
+
+Evaluation functions include two named _pred_error_ and _est_acc_, which are to evaluate the performance of the algorithm, the former compute the prediction error $||y-Z\hat \beta||_2^2/n$ , the latter compute the estimation accuracy by $\ell_q$ losses $||\hat \beta-\beta^{\star}||,\quad q=1,2,\infty$, where $\beta^{\star}$ is the true regression coefficient. 
+```{r}
+#compute estimation error.
+prediction_error=pred_error(x=data1[[1]],y=data1[[2]],beta_hat = beta_est)
+#compute estimation accuracy. 
+estimation_accuracy=est_acc(beta_est,beta)
+print(prediction_error)
+print(estimation_accuracy)
+```
+
+
+## Section 2 
+
+This section is the implementaion of algorithm named sequentially and iteratively reweighted squares(SIRS) raised by JINCHI LV AND YINGYING FAN in "a unified approach to model selection and sparse recovery using regularized least squares", 2009.
+
+### Question background
+
+Many real-world signals are approximately sparse, meaning that a small fraction of the coordinates contain almost all the signal mass; examples include images, audio, and any signals drawn from Zipfian, power-law, or log-normal distributions. If a signal $x \in \mathbb{R}^n$ is approximately k-sparse, then ideally the complexity of estimating or manipulating x should scale primarily with k rather than n.
+
+Such sparse recovery algorithms are possible for a variety of different problem variants, corresponding to different modalities of measuring x and different guarantees on the estimation error. In this chapter we will consider streaming algorithms, compressed sensing, and sparse Fourier transforms, as well as extensions to low-rank matrix recovery.
+
+### Mathematical form
+
+Find the minimum $L_0$ (sparsest possible) solution to the linear equation:
+$$\pmb{y}=\pmb{X}\pmb{\beta}$$
+where $\pmb{ \beta }=(\beta_1,...,\beta_p)^T$,$\pmb{y}=\pmb{X}\pmb{\beta_0}$,$\pmb{X}$ is a $n\times p$ design matrix, $\pmb{\beta_0}=(\beta_{0,1},...,\beta_{0,p})$
+
+When the $p \times p$ matrix $\pmb{X}^T \pmb{X}$ is singular or close to singular and n is large, finding $\pmb{\beta_0}$ is not an easy task.
+
+### Constrained convex optimization problem
+
+$\rho$-regularization problem:
+
+$$\min\sum_{j=1}^{p}\rho(|\beta_j|),\quad subjected\ to \ \pmb{y}=\pmb{X}\pmb{\beta},$$
+
+with $\rho_a$ penalty,$a \in (0,\infty)$
+
+$$\rho_a(t)=(\frac{t}{a+t})I(t\ne0)+(\frac{a}{a+t})t,\quad t\in [0,\infty)$$
+
+and 
+$$\rho_0(t)=I(t\ne 0),\ \rho_\infty(t)=t, \quad t\in [0,\infty)$$
+
+### Usage of function
+
+PS. all of the package functions in this section are written by Rcpp. 
+
+Our main function only contains one named _sirs_, which takes  A,y,x0,maxsize,eps,a,delta,thresh,maxiter,maxseq and tol as input,with default delta=1e-6,thresh=1e-6,maxiter=50, maxseq = 50, tol=1e-6,see the meaning respectively by _help(sirs)_, mostly the only input we are concerned are $n\times p$design matrix _X_, response  n-vector _y_, initial position for algorithm _x0_, sirs parameter for penalty _a_, maximum size of the sparse model _maxsize_.
+```{r}
+library(MASS)
+#generate the data for numeric study
+n = 100
+p = 50
+a = 0.4
+rho = 0.5
+mu = c(rep(0,p))
+sigma1 <- matrix(0, p, p)
+sigma1 <- rho ^ (abs(row(sigma1) - col(sigma1)))
+A = mvrnorm(n,mu,sigma1)
+beta = c(0.5,-0.5,1,-1.2,-1,rep(0,p-5))
+y = A%*%beta
+
+#use function sirs
+beta_hat=sirs(A,y,x0=rep(1,p),maxsize=min(ceiling(n/2),p),eps=1/p,a=a)
+rbind(beta[1:5],beta_hat[1:5])
+prediction_error = pred_error(exp(A),y,as.matrix(beta_hat))
+estimation_accuracy = est_acc(beta_hat,beta)
+print(prediction_error)
+print(estimation_accuracy)
+```
+

@@ -1,0 +1,18 @@
+Package: StatComp22010
+Type: Package
+Title: Implementation of one method of variable selection in regression with compositional covariates, sequentially and iteratively reweighted squares(SIRS) with Rcpp and all of the homework of the cource "statistic computing"
+Version: 1.0
+Date: 2022-12-02
+Author: 22010
+Maintainer: 22010 <zhangxiao@mail.ustc.edu.cn>
+Description: With a method raised by WEI LIN, PIXU SHI, RUI FENG AND HONGZHE LI, this package provide a function estimate() to do regression with compositional covariates so as to estimate the coefficients, note that before using this function, matrix X and vector y should be centralized first; moreover, this package provides a function sirs() written by Rcpp to implement SIRS algorithm, in addition, all of my homework of the cource "statistic computing" is included.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.8), RcppArmadillo, stats, microbenchmark, knitr, rmarkdown, VGAM, MASS, DAAG, bootstrap, boot, dplyr, ggplot2, reshape2, wordspace
+LinkingTo: Rcpp, RcppArmadillo
+Encoding: UTF-8
+RoxygenNote: 7.2.2
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+URL: http://github.com/frestle/StatComp
+BugReports: http://github.com/frestle/StatComp/issues
+
